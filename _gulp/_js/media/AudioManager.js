@@ -4,9 +4,6 @@ YSD.AudioManager = (function(){
 	var length = 0;
 	var callback;
 
-	var seVolume = .45;
-	var bgmVolume = 0.25;
-	var serifVolume = 1;
 	var sources = {};
 	var gainNode;
 
@@ -19,6 +16,7 @@ YSD.AudioManager = (function(){
 		this.audios = {};
 		this.loadingAudios = {};
 
+		this.volume = 0.5;
 	}
 
 
@@ -28,11 +26,7 @@ YSD.AudioManager = (function(){
 
 			for( var key in datas ){
 				var data = datas[key];
-				if( data.type == 'serif' ){
-					if( this.audios[data.value] ) this.delete( data.value );
-				}else{
-					if( this.audios[data.type+data.value] ) this.delete( data.type+data.value );
-				}
+				if( this.audios[data.value] ) this.delete( data.value );
 
 				this.loadingAudios[data.value] = true;
 			}
@@ -70,9 +64,6 @@ YSD.AudioManager = (function(){
 		play : function( value, fadeFlag, fadeTime ){
 
 			this.playStep2( value, fadeFlag, fadeTime );
-			// if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
-	  // 			if( this.checkSampleRateBug() ) this.playStep2( value, fadeFlag, fadeTime );
-	  // 		}
 
 		},
 
@@ -81,7 +72,7 @@ YSD.AudioManager = (function(){
 
 			if( !this.audios[ value ] ) return;
 
-			var type = this.audios[ value ].type;
+			var loopFlag = this.audios[ value ].loop;
 
 			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 
@@ -91,8 +82,8 @@ YSD.AudioManager = (function(){
 				//source.connect(YSD.audioContext.destination);	//ボリューム調整するときはいらない
 
 				//volume
-				gainNode = this.getGainNode( source, type );
-				if( type == 'bgm' ) source.loop = true;
+				gainNode = this.getGainNode( source );
+				if( loopFlag ) source.loop = true;
 				
 				//
 				source.start(0);
@@ -100,31 +91,22 @@ YSD.AudioManager = (function(){
 
 			}else{
 
-				if( type == 'bgm' ) this.audios[ value ].volume = bgmVolume;
-				if( type == 'se' ) this.audios[ value ].volume = seVolume;
+				this.audios[ value ].volume = this.volume;
 
 				this.audios[ value ].play().catch(function() {});
 			
 			}
 
 
-			if( fadeFlag ){
-				this.fade( 'fadeIn', type, value, fadeTime, gainNode );
-			}
+			if( fadeFlag ) this.fade( 'fadeIn', value, fadeTime, gainNode );
 
 		},
 
 
-		getGainNode : function( source, type ){
+		getGainNode : function( source ){
 
 			gainNode = YSD.audioContext.createGain();
-			if( type == 'bgm' ){
-				gainNode.gain.value = bgmVolume;
-			}else if( type == 'se' ){
-			 	gainNode.gain.value = seVolume;
-			}else{
-			 	gainNode.gain.value = serifVolume;
-			}
+		 	gainNode.gain.value = this.volume;
 			source.connect(gainNode);
 			gainNode.connect(YSD.audioContext.destination);
 
@@ -142,25 +124,23 @@ YSD.AudioManager = (function(){
 		},
 
 
-		fade : function( fadeInOutType, type, value, fadeTime, gainNode, callback ){
+		fade : function( type, value, fadeTime, gainNode, callback ){
 
 			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 				gainNode.gain.value = 0;
 			}else{
 				this.audios[ value ].volume = 0;
 			}
-			var volume = 1;
+			var _volume = 1;
 			var startVolume = 0;
-			if( fadeInOutType == 'fadeIn' ){
-				if( type == 'bgm' ) volume = bgmVolume;
-				if( type == 'se' ) volume = seVolume;
+			if( type == 'fadeIn' ){
+				_volume = this.volume;
 			}else{
-				if( type == 'bgm' ) startVolume = bgmVolume;
-				if( type == 'se' ) startVolume = seVolume;
-				volume = 0;
+				startVolume = this.volume;
+				_volume = 0;
 			}
 
-            $( { volume:startVolume } ).animate({ volume:volume }, {
+            $( { volume:startVolume } ).animate({ volume:_volume }, {
                 duration:fadeTime,
                 easing: 'linear',
                 progress:function () {
@@ -211,70 +191,16 @@ YSD.AudioManager = (function(){
 		},
 
 
-		stopSerifAndSe : function(){
 
-			this.stopOnType( 'se' );
-			this.stopOnType( 'serif' );
+		fadeOut : function( value, fadeTime ){
 
-		},
-
-
-		stopSe : function(){
-		
-			this.stopOnType( 'se' );
-
-		},
-
-
-		stopSerif : function(){
-
-			this.stopOnType( 'serif' );
-
-		},
-
-
-		stopProductionSerif : function(){
-
-			this.stopOnType( 'productionSerif' );
-
-		},
-
-
-		stopOnType : function( type ){
-
-			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
-				for( var key in sources ){
-			
-					if( key.indexOf( type ) != -1 ){
-						sources[key].stop(0);
-						delete sources[key];
-					}
-				}
-			}else{
-				for( var key in this.audios ){
-					if( key.indexOf( type ) != -1 ){
-						this.audios[key].currentTime = 0;
-						this.audios[key].pause();
-					}
-				}
-			}
-
-		},
-
-
-		stopBgm : function( value, fadeFlag, fadeTime ){
-
-			if( !value ){
-				this.stopOnType( 'bgm' );
-				return;
-			}
-			var type = this.audios[ value ].type;
+			if( !value ) return;
 
 			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 				var source = YSD.audioContext.createBufferSource();
                 source.start = source.start || source.noteOn;
 				source.buffer = this.audios[ value ];
-				gainNode = this.getGainNode( source, type );
+				gainNode = this.getGainNode( source );
 			}
 				
 			var callback = function(){
@@ -291,15 +217,8 @@ YSD.AudioManager = (function(){
 			}.bind( this, value );
 
 
-			if( fadeFlag ){
-
-				this.fade( 'fadeOut', 'bgm', value, fadeTime, gainNode, callback );
+			this.fade( 'fadeOut', value, fadeTime, gainNode, callback );
 			
-			}else{
-
-				callback();
-
-			}
 		},
 
 
@@ -323,7 +242,6 @@ YSD.AudioManager = (function(){
 
 			var audio = this.audios[value];
 			var duration = audio.duration;
-			if( audio.type != 'bgm' ) duration += .5;
 
 			return duration;
 
@@ -384,13 +302,8 @@ YSD.AudioLoader = (function(){
 					var _obj = arguments[0];
 					YSD.audioContext.decodeAudioData(request.response, function(buffer) {
 						
-						if( _obj.type == 'serif' ){
-							var key = _obj.value;
-						}else{
-							key = _obj.type + _obj.value;
-						}
+						var key = _obj.value;
 						this.audios[ key ] = buffer;
-						this.audios[ key ].type = _obj.type;
 
 						this.loadCompHandler();
 					
@@ -409,15 +322,11 @@ YSD.AudioLoader = (function(){
 				var ele = $( '<audio src="' + obj.src + '"></audio>' );
 				//ele.append( '<source>' );
 
-				if( obj.type == 'bgm' ) ele[0].loop = true;
+				if( obj.loop == true ) ele[0].loop = true;
 				
-				if( obj.type == 'serif' ){
-					var value = obj.value;
-				}else{
-					value = obj.type + obj.value;
-				}
+				var value = obj.value;
 				this.audios[ value ] = ele[0];
-				this.audios[ value ].type = obj.type;
+
 
 				ele.on( 'loadedmetadata', this.loadCompHandler.bind( this ) );
 				ele.on( 'error', function(){
@@ -428,7 +337,7 @@ YSD.AudioLoader = (function(){
 					_ele.remove();
 
 					//delete this.audios[ _value ];
-					this.audios[ value ] = null;
+					this.audios[ _value ] = null;
 					this.loadErrorHandler();
 				
 				}.bind( this, ele, value ) );
@@ -458,8 +367,7 @@ YSD.AudioLoader = (function(){
 
 		loadErrorHandler : function(){
 
-			YSD.errorPopup.setMessage( '読み込みに失敗しました。' );
-			YSD.errorPopup.show();
+			console.log( 'load audio error...' );
 
 			this.loadCount++;
 			if( this.loadCount >= this.length ){
