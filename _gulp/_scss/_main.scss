@@ -1,0 +1,930 @@
+@charset "utf-8";
+// ===================================================================
+// メイン - このファイルにメインコンテンツ部分のスタイルをガツガツ書いていく。
+// ===================================================================
+
+
+
+//@import "top/sprite/*.png";
+$sprites:sprite-map("top/sprite/*.png");
+
+
+/*  BASE STYLE  */
+body {
+	color: $txt;
+	font-family: $baseFont;
+    -webkit-text-size-adjust: 100%;
+	word-wrap: break-word;
+	// background-image:url( '../images/loading.gif' );
+	// background-repeat:no-repeat;
+	// background-position:center center;
+	// background-attachment: fixed;
+}
+
+
+// リンク
+a {
+	//tap時の不透明度20％
+	-webkit-tap-highlight-color: rgba(255,255,255,.2);
+	&:link {
+		color: $linkColor;
+	}
+	&:visited {
+		color: $linkColor_visited;
+		//color:darken($linkColor, 20%);
+	}
+	&:hover {
+		text-decoration: none;
+		color: $linkColor_hover;
+		//color:lighten($linkColor, 20%);
+	}
+	&:active {
+		color: $linkColor_active;
+		//color:lighten($linkColor, 20%);
+	}
+}
+
+// from ballog
+// http://blog.bluearrowslab.com/smartphone/topicks/376/
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    position: relative;
+    margin-right: 5px;
+    border-radius: 8px;
+    border: 1px solid #4c4c4c;
+    -webkit-box-sizing: border-box;
+    width: 28px;
+    height: 28px;
+    background: $white;
+}
+
+
+input[type="checkbox"]:checked:before {
+    position: absolute;
+    left: 1px;
+    top: 17px;
+    display: block;
+    content: "";
+    width: 10px;
+    height: 4px;
+    background: $black;
+    -webkit-transform: rotate(45deg);
+    -webkit-transform-origin: right center;
+}
+
+input[type="checkbox"]:checked:after {
+    display: block;
+    position: absolute;
+    left: 9px;
+    top: 17px;
+    content: "";
+    width: 19px;
+    height: 4px;
+    background: $black;
+    -webkit-transform: rotate(-53deg);
+    -webkit-transform-origin: left center;
+}
+
+
+
+
+////////////////////////
+///Sections
+////////////////////////
+
+///* -------------- wrapper ---------------- */
+#wrapper {
+	background-image:url('../images/bg.png');
+	background-repeat:no-repeat;
+	background-position: center 380px;
+	text-align: left;
+}
+
+
+.transition0{
+	@each $prefix in $prefixList{
+	    #{$prefix}transition-duration: .8s;
+	    #{$prefix}transition-timing-function: ease;
+	}
+}
+
+
+#content{
+	width:1000px;
+	margin:0 auto;
+	padding-top:110px;
+	position:relative;
+
+	img.car0{
+		opacity:0;
+		position:absolute;
+		top: 450px;
+		left: 160px;
+	}
+
+	img.car1{
+		opacity:0;
+		position:absolute;
+		top: 370px;
+		left: 590px;
+	}
+
+	img.car2{
+		opacity:0;
+		position:absolute;
+		top: 450px;
+		left: 810px;
+	}
+
+	h2#logo{
+		width:275px;
+		height:41px;
+		margin:0 auto 30px auto;
+		opacity:0;
+		@each $prefix in $prefixList{
+			#{$prefix}transform:translate3d(0, 0, 0);
+		}
+		@include spriteImg($sprites, 'logo');
+	}
+
+	#title{
+		width:1000px;
+		height:246px;
+		margin:0 auto 50px auto;
+		position:relative;
+		letter-spacing: -.40em;
+
+		img{
+			margin:0;
+			padding:0;
+			display:inline-block;
+			opacity:0;
+		}
+
+		div.layer0{
+			width:1000px;
+			position:relative;
+
+			img{
+
+				&.title2{
+					margin-left: -10px;
+				}
+
+				&.hammer{
+					position:absolute;
+					left: -5px;
+					top: 5px;
+				}
+
+				&.huriko{
+					position:absolute;
+					left: 206px;
+					top: 112px;
+				}
+
+				&.nezi0{
+					position:absolute;
+					left: 370px;
+					top: 180px;
+				}
+
+				&.nezi1{
+					position:absolute;
+					left: 360px;
+					top: 160px;
+				}
+
+				&.balance{
+					position:absolute;
+					left: 526px;
+					top: 88px;
+				}
+
+				&.eye{
+					position:absolute;
+					left: 666px;
+					top: -2px;
+				}
+
+				&.universe{
+					position:absolute;
+					left: 790px;
+					top: 120px;
+				}
+
+				&.other{
+					position:absolute;
+					left: 148px;
+					top: 30px;
+				}
+			}
+		}
+
+
+		div.layer1{
+			width:1000px;
+			position:absolute;
+			top:0px;
+			left:0px;
+
+			img{
+
+				&.title2{
+					margin-left: -10px;
+				}
+			}
+		}
+	}
+
+
+	#outline{
+		width:562px;
+		height:85px;
+		margin:0 auto 50px auto;
+		opacity:0;
+		@each $prefix in $prefixList{
+			#{$prefix}transform:translate3d(0, 0, 0);
+		}
+		@include spriteImg($sprites, 'outline');
+	}
+
+
+	div.work{
+		width:996px;
+		margin:0 auto 40px auto;
+		background-color:#fff;
+		border:2px solid #000;
+		opacity:0;
+		position:relative;
+		@each $prefix in $prefixList{
+			#{$prefix}transform:translate3d(0, 0, 0);
+		}
+
+		div.inner{
+			overflow:hidden;
+
+			p.main-img{
+				width:996px;
+				height:340px;
+				background-image:url('../images/work01/main_img.jpg');
+				background-repeat:no-repeat;
+				position:relative;
+				text-indent:-9999px;
+				@include clearfix;
+			}
+		}
+
+		img.coming-soon{
+			opacity:0;
+			position:absolute;
+			right: 15px;
+			top: 180px;
+			z-index:1;
+		}
+
+		.frame-right{
+			width:18px;
+			height:100%;
+			padding-top:2px;
+			background-image:url('../images/top/frame3.png');
+			background-repeat:no-repeat;
+			background-position:0px bottom;
+			background-color:#000;
+			position:absolute;
+			top:0px;
+			right:-20px;
+		}
+
+		.frame-top{
+			width:100%;
+			height:12px;
+			background-image:url('../images/top/frame1.png');
+			position:absolute;
+			top:-12px;
+			left:15px;
+
+			&:before{
+				content:'';
+				margin-left:-18px;
+				@include spriteImg($sprites, 'frame0');
+			}
+
+			&:after{
+				content:'';
+				position:absolute;
+				right:-5px;
+				top:0px;
+				@include spriteImg($sprites, 'frame2');
+			}
+		}
+	}
+}
+
+
+
+
+///* -------------- footer ---------------- */
+#footer {
+	width:100%;
+	height:38px;
+	line-height:38px;
+	background-color:#fff;
+	position:relative;
+	text-align:center;
+
+	p{
+		line-height:40px;
+		display:inline-block;
+
+		span{
+			margin-right:58px;
+		}
+	}
+
+
+	ul{
+		width:1000px;
+		margin-left:-500px;
+		position:absolute;
+		top:0px;
+		left:50%;
+		text-align: right;
+		li{
+			margin-left:9px;
+			display:inline-block;
+			vertical-align: bottom;
+			
+			a{
+
+				img{
+					width:30px;
+				}
+
+				&:hover{
+					opacity:.7;
+				}
+			}
+
+			&.sns0{
+				position:relative;
+				top:1px;
+			}
+
+			&.sns1{
+				position:relative;
+				top:-1px;
+			}
+
+			&.sns2{
+				a{
+					position:relative;
+
+					&:hover{
+						opacity:1;
+					}
+				}
+
+				div.popup{
+					width:180px;
+					height:260px;
+					background-image:url('../images/sns/popup.png');
+					background-repeat:no-repeat;
+					position:absolute;
+					left: -75px;
+					top: -225px;
+					text-align: center;
+
+					h3{
+						margin-bottom:3px;
+						padding-top: 8px;
+						color:#fff;
+						font-size:18px;
+						font-weight: bold;
+					}
+
+					p{
+						line-height: 15px;
+						margin-bottom: 8px;
+						color:#fff;
+						font-size:11px;
+						letter-spacing: -.02em;
+					}
+
+					div.qr{
+						width:100px;
+						height:100px;
+						margin: 0 auto;
+						background-image:url('../images/sns/qr.gif');
+						background-repeat:no-repeat;
+						text-indent: -9999px;
+					}
+
+					p.close-btn{
+						display:none;
+					}
+				}
+			}
+
+			&.sns3{
+				position:relative;
+				top:-1px;
+
+				img{
+					width:25px;
+				}
+			}
+		}
+	}
+}
+
+
+.redirect{
+	width:100%;
+
+	p{
+		width: 100%;
+		margin: 0 auto;
+		padding-top: 200px;
+		text-align: center;
+	}
+}
+
+
+
+//-------------------------------------------
+//    アニメーションのクラス群
+//-------------------------------------------
+body.animation-start{
+
+	@include keyframes(fadeInAnim0){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, -20px) ;
+	    }
+	    opacity:0;
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, 0px) ;
+	    }
+	    opacity:1;
+	  }
+	}
+
+	.fadeInAnim0 {
+		@include set-animation(fadeInAnim0 ease-in-out .5s 0s forwards);
+	}
+
+
+	@include keyframes(textFadeinanim0){
+	  0% {
+	    opacity:0;
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:  translate(0px, -60px);
+		}
+	  }
+	  10% {
+	    opacity:0.5;
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg) translate(0px, 0px);
+		}
+	  }
+	  20% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+	   		#{$prefix}transform:  rotate(19deg) translate(0px, -60px);
+	   	}
+	  }
+	  40% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(25deg) translate(0px, -60px);
+		}
+	  }
+	  60% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg) translate(0px, 0px);
+	    }
+	  }
+	  70% {
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:  rotate(-5deg) translate(0px, -20px);
+		}
+	  }
+	  85% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(-10deg) translate(0px, -17px);
+	    }
+	  }
+	  100% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:  rotate(0deg) translate(0px, 0px);
+		}
+	  }
+	}
+
+
+
+	@include keyframes(textFadeinanim1){
+	  0% {
+	    opacity:0;
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:  translate(0px, -60px);
+		}
+	  }
+	  10% {
+	    opacity:0.5;
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg) translate(0px, 0px);
+		}
+	  }
+	  20% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+	   		#{$prefix}transform:  rotate(19deg) translate(0px, -60px);
+	   	}
+	  }
+	  40% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(13deg) translate(0px, -80px);
+		}
+	  }
+	  60% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(10deg) translate(0px, 0px);
+	    }
+	  }
+	  70% {
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:  rotate(-5deg) translate(0px, -20px);
+		}
+	  }
+	  85% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(-2deg) translate(0px, -30px);
+	    }
+	  }
+	  100% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:  rotate(0deg) translate(0px, 0px);
+		}
+	  }
+	}
+
+	.textFadeinanim0 {
+		@include set-animation(textFadeinanim0 ease-in-out .8s .5s forwards);
+	}
+
+
+	.textFadeinanim1 {
+		@include set-animation(textFadeinanim0 ease-in-out 1s .7s forwards);
+	}
+
+
+
+	.textFadeinanim2 {
+		@include set-animation(textFadeinanim0 ease-in-out .8s .9s forwards);
+	}
+
+
+
+	.textFadeinanim3 {
+		@include set-animation(textFadeinanim0 ease-in-out .8s 1.1s forwards);
+	}
+
+
+
+	.textFadeinanim4 {
+		@include set-animation(textFadeinanim0 ease-in-out .8s 1.3s forwards);
+	}
+
+	.textFadeinanim0-0 {
+		@include set-animation(textFadeinanim1 ease-in-out .8s .5s forwards);
+	}
+
+
+	.textFadeinanim1-0 {
+		@include set-animation(textFadeinanim0 ease-in-out 1s .7s forwards);
+	}
+
+
+
+	.textFadeinanim2-0 {
+		@include set-animation(textFadeinanim0 ease-in-out .8s .9s forwards);
+	}
+
+
+
+	.textFadeinanim3-0 {
+		@include set-animation(textFadeinanim0 ease-in-out .8s 1.1s forwards);
+	}
+
+
+
+	.textFadeinanim4-0 {
+		@include set-animation(textFadeinanim1 ease-in-out .8s 1.3s forwards);
+	}
+
+
+	@include keyframes(fadeInAnim2){
+	  0% {
+	    opacity:0;
+	  }
+	  100% {
+	    opacity:1;
+	  }
+	}
+
+	.fadeInAnim2 {
+		@include set-animation(fadeInAnim2 ease-in-out .5s 2s forwards);
+	}
+
+
+	@include keyframes(fadeInAnim3){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, -20px) ;
+	    }
+	    opacity:0;
+	  }
+	  50% {
+		@each $prefix in $prefixList{
+	   		#{$prefix}transform:  translate(0px, 0px) ;
+	   	}
+	    opacity:1;
+	  }
+	  60% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, -10px) ;
+	    }
+	  }
+	  70% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, -10px) ;
+	    }
+	  }
+	  90% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, 0px) ;
+	    }
+	  }
+	  95% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, -5px) ;
+	    }
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  translate(0px, 0px) ;
+	    }
+	    opacity:1;
+	  }
+
+	}
+
+	.fadeInAnim3 {
+		@include set-animation(fadeInAnim3 ease-in-out .8s 3s forwards);
+	}
+
+
+	@include keyframes(comingSoonFadeInAnim){
+	  0% {
+	    opacity:0;
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:rotate(45deg) scale(2, 2);
+		}
+	  }
+	  50% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:rotate(0deg) scale(1, 1);
+	    }
+	  }
+	  75% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:rotate(0deg) scale(1.4, 1.4);
+		}
+	  }
+	  100% {
+	    opacity:1;
+		@each $prefix in $prefixList{
+		    #{$prefix}transform:rotate(0deg) scale(1, 1);
+		}
+	  }
+	}
+
+	.comingSoonFadeInAnim {
+		@include set-animation(comingSoonFadeInAnim ease-in-out .5s 0s forwards);
+	}
+
+
+	.fadeInAnim5 {
+		@include set-animation(fadeInAnim0 ease-in-out .5s .5s forwards);
+	}
+
+
+	.fadeInAnim6 {
+		@include set-animation(fadeInAnim2 ease-in-out .5s 2.3s forwards);
+	}
+
+
+	@include keyframes(fadeInAnim7){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg);
+		}
+	  }
+	  40% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg);
+		}
+	  }
+	  45% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(60deg);
+		}
+	  }
+	  55% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(60deg);
+		}
+	  }
+	  60% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg);
+	   	}
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg);
+	   	}
+	  }
+	}
+
+
+	.fadeInAnim7 {
+		@include set-animation(fadeInAnim7 ease-in-out 2s 2.3s infinite);
+	}
+
+
+	@include keyframes(fadeInAnim8){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(0deg);
+		}
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform:  rotate(360deg);
+		}
+	  }
+	}
+
+
+	.fadeInAnim8 {
+		@include set-animation(fadeInAnim8 linear 4s 2.3s infinite);
+	}
+
+
+	@include keyframes(fadeInAnim9){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  20% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  50% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 10px);
+		}
+	  }
+	  80% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	}
+
+
+	.fadeInAnim9 {
+		@include set-animation(fadeInAnim9 linear 4s 2.3s infinite);
+	}
+
+
+	@include keyframes(fadeInAnim10){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  20% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  50% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(-13px, 10px);
+		}
+	  }
+	  80% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	}
+
+
+	.fadeInAnim10 {
+		@include set-animation(fadeInAnim10 linear 4s 2.3s infinite);
+	}
+
+
+	@include keyframes(fadeInAnim11){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  20% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  50% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(8px, 10px);
+		}
+	  }
+	  80% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	}
+
+
+	.fadeInAnim11 {
+		@include set-animation(fadeInAnim11 linear 4s 2.3s infinite);
+	}
+
+
+	@include keyframes(fadeInAnim12){
+	  0% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  20% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  50% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(15px, 10px);
+		}
+	  }
+	  80% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	  100% {
+		@each $prefix in $prefixList{
+	    	#{$prefix}transform: translate(0px, 0px);
+		}
+	  }
+	}
+
+
+	.fadeInAnim12 {
+		@include set-animation(fadeInAnim12 linear 4s 3s infinite);
+	}
+
+
+}

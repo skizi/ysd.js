@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<title>YSD</title>
+	<meta name="viewport" content="width=640">
+	<script src="../../libs/jquery.js"></script>
+	<script src="../../libs/ysd.js"></script>
+</head>
+<body id="top">
+
+	<img src="assets/images/test1.jpg" id="img">
+	<img src="assets/images/logo0.jpg" id="img2">
+	<canvas width="500" height="500" id="canvas"></canvas>
+	<canvas width="64" height="64" id="canvas2"></canvas>
+	<div id="debug"></div>
+	<script>
+		
+		function animaterCompHandler(){
+			console.log( arguments[1].type );
+		}
+
+		function pixelIndexCallBack(){
+			var colors = arguments[1].colors;
+			console.log( colors );
+		}
+
+		var debug = document.getElementById( 'debug' );
+
+		var canvas = document.getElementById( 'canvas' );
+		var img = document.getElementById( 'img' );
+		var animater = new YSD.CanvasRgbShiftAnimater0( canvas, img, 10, 10, 30 );
+		animater.element.on( 'callback', animaterCompHandler );
+		animater.loopFlag = true;
+		animater.play();
+		//animater.reverse( true );
+
+
+		var canvas2 = document.getElementById( 'canvas2' );
+		var img2 = document.getElementById( 'img2' );
+		var pixelIndex = new YSD.CanvasPixelIndex0( img2, 255 );
+		pixelIndex.element.on( 'callback', pixelIndexCallBack.bind( this ) );
+
+	</script>
+</body>
+</html>
