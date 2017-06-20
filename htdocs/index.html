@@ -42,21 +42,21 @@
 		pixelIndex.element.on( 'callback', pixelIndexCallBack.bind( this ) );
 
 
-var audioManager = new YSD.AudioManager();
-var datas = [
-	{
-		value:'se0',
-		src:'assets/sound/0.ogg'
-	},
-	{
-		value:'se1',
-		src:'assets/sound/1.ogg'
-	}
-];
+		var audioManager = new YSD.AudioManager();
+		var datas = [
+			{
+				value:'se0',
+				src:'assets/sound/0.ogg'
+			},
+			{
+				value:'se1',
+				src:'assets/sound/1.ogg'
+			}
+		];
 
-audioManager.loadAudios( datas, function(){
-	audioManager.play( 'se1' );
-});
+		audioManager.loadAudios( datas, function(){
+			audioManager.play( 'se1' );
+		});
 
 	</script>
 </body>
