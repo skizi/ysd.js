@@ -6,193 +6,6 @@ var __extends = this.__extends || function (d, b) {
     d.prototype = new __();
 };
 
-YSD.SpriteAnimator = (function(){
-	
-	function SpriteAnimator( element, spriteUrl, json, fps ){
-
-		this.element = $( element );
-		this.spriteUrl = spriteUrl;
-		this.json = json;
-		this.frames = this.json.frames;
-
-		this.stopFlag = true;
-		this.spriteFrame = 0;
-		this.animations = {};
-		this.nowAnimationName = '';
-		setInterval( this.animate.bind( this ), 1000 / fps );
-
-		var dummyElement = $('<div>');
-		dummyElement.css({backgroundImage:this.spriteUrl});
-	}
-
-	
-	SpriteAnimator.prototype = {
-
-		show:function(){
-
-			this.element.show();
-
-		},
-
-
-		hide: function(){
-
-			this.element.hide();
-
-		},
-
-
-		animate:function(){
-
-			if( this.stopFlag ){
-				return;
-			}else{
-				var animation = this.animations[ this.nowAnimationName ];
-			}
-
-			var obj = this.frames[ this.spriteFrame ];
-			if( this.spriteFrame > animation.end ){
-				this.spriteFrame = animation.start;
-				if( !animation.loopFlag ){
-					this.stopFlag = true;
-					if( !animation.forwardFlag ){
-						this.element.css({backgroundImage:'none'});
-					}
-					return;
-				}
-			}
-			this.spriteFrame++;
-
-			var x = -obj.frame.x;
-			var y = -obj.frame.y;
-
-			this.element.css({
-				backgroundPosition:x + 'px ' + y + 'px'
-			});
-
-		},
-
-
-		start:function( name ){
-
-			if( name ) this.nowAnimationName = name;
-			var animation = this.animations[ this.nowAnimationName ];
-			this.stopFlag = false;
-			this.spriteFrame = animation.start;
-			this.element.css({backgroundImage:'url("' + this.spriteUrl + '")'});
-
-		},
-
-
-		stop:function(){
-
-			this.stopFlag = true;
-			this.element.css({backgroundImage:'none'});
-					
-		},
-
-
-		pause:function(){
-
-			this.stopFlag = true;
-					
-		},
-
-
-		refresh:function(){
-
-			this.stopFlag = false;
-			this.spriteFrame = 0;
-
-		},
-
-
-		setAnimation:function( name, start, end, loopFlag, forwardFlag ){
-
-			this.animations[ name ] = {
-				start:start,
-				end:end,
-				loopFlag:loopFlag,
-				forwardFlag:forwardFlag
-			};
-
-		}
-
-	}
-
-	return SpriteAnimator;
-
-})();
-YSD.DomView = (function(){
-
-	function DomView(){
-		
-		var container = $('<div>');
-		container.css({
-			position:'absolute',
-			top:'0px',
-			left:'0px'
-		});
-		$(document.body).append( container );
-
-		$( '*' ).each(function(){
-
-			var target = $(this);
-			var offset = target.offset();
-			var color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
-
-			//add border
-			var border = $('<div>');
-			border.css({
-				width:target.width() + 'px',
-				height:target.height() + 'px',
-				boxSizing:'border-box',
-				border:'1px solid #' + color,
-				position:'absolute',
-				//left:'0px',
-				//top:'0px',
-				left:offset.left,
-				top:offset.top
-			});
-			container.append( border );
-
-
-			//add tooltip
-			var tooltip = $('<div>');
-			var id = target.attr( 'id' );
-			if( !id ) id = '';
-			var className = target.attr( 'class' );
-			if( !className ) className = '無';
-
-			var html = 'id:' + id + ', class:' + className;
-			tooltip.html( html );
-
-			tooltip.css({
-				position:'absolute',
-				left:'0px',
-				top:'0px',
-				fontSize:'20px',
-				//left:offset.left,
-				//top:offset.top,
-				backgroundColor:'#' + color
-			});
-			border.append( tooltip );
-
-		});
-
-
-	}
-
-
-	DomView.prototype = {
-
-
-
-	}
-
-	return DomView;
-
-})();
 YSD.CanvasAnimater0 = (function(){
 	
 	function CanvasAnimater0( canvas, img, length, strength, fps ){
@@ -800,6 +613,123 @@ YSD.CanvasRgbShiftAnimater0 = (function( _super ){
 	return CanvasRgbShiftAnimater0;
 
 })( YSD.CanvasAnimater0 );
+YSD.SpriteAnimator = (function(){
+	
+	function SpriteAnimator( element, spriteUrl, json, fps ){
+
+		this.element = $( element );
+		this.spriteUrl = spriteUrl;
+		this.json = json;
+		this.frames = this.json.frames;
+
+		this.stopFlag = true;
+		this.spriteFrame = 0;
+		this.animations = {};
+		this.nowAnimationName = '';
+		setInterval( this.animate.bind( this ), 1000 / fps );
+
+		var dummyElement = $('<div>');
+		dummyElement.css({backgroundImage:this.spriteUrl});
+	}
+
+	
+	SpriteAnimator.prototype = {
+
+		show:function(){
+
+			this.element.show();
+
+		},
+
+
+		hide: function(){
+
+			this.element.hide();
+
+		},
+
+
+		animate:function(){
+
+			if( this.stopFlag ){
+				return;
+			}else{
+				var animation = this.animations[ this.nowAnimationName ];
+			}
+
+			var obj = this.frames[ this.spriteFrame ];
+			if( this.spriteFrame > animation.end ){
+				this.spriteFrame = animation.start;
+				if( !animation.loopFlag ){
+					this.stopFlag = true;
+					if( !animation.forwardFlag ){
+						this.element.css({backgroundImage:'none'});
+					}
+					return;
+				}
+			}
+			this.spriteFrame++;
+
+			var x = -obj.frame.x;
+			var y = -obj.frame.y;
+
+			this.element.css({
+				backgroundPosition:x + 'px ' + y + 'px'
+			});
+
+		},
+
+
+		start:function( name ){
+
+			if( name ) this.nowAnimationName = name;
+			var animation = this.animations[ this.nowAnimationName ];
+			this.stopFlag = false;
+			this.spriteFrame = animation.start;
+			this.element.css({backgroundImage:'url("' + this.spriteUrl + '")'});
+
+		},
+
+
+		stop:function(){
+
+			this.stopFlag = true;
+			this.element.css({backgroundImage:'none'});
+					
+		},
+
+
+		pause:function(){
+
+			this.stopFlag = true;
+					
+		},
+
+
+		refresh:function(){
+
+			this.stopFlag = false;
+			this.spriteFrame = 0;
+
+		},
+
+
+		setAnimation:function( name, start, end, loopFlag, forwardFlag ){
+
+			this.animations[ name ] = {
+				start:start,
+				end:end,
+				loopFlag:loopFlag,
+				forwardFlag:forwardFlag
+			};
+
+		}
+
+	}
+
+	return SpriteAnimator;
+
+})();
 YSD.KeyManager = (function(){
 
 
@@ -1111,6 +1041,76 @@ YSD.TouchManager = (function(){
 
 
 
+YSD.DomView = (function(){
+
+	function DomView(){
+		
+		var container = $('<div>');
+		container.css({
+			position:'absolute',
+			top:'0px',
+			left:'0px'
+		});
+		$(document.body).append( container );
+
+		$( '*' ).each(function(){
+
+			var target = $(this);
+			var offset = target.offset();
+			var color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+
+			//add border
+			var border = $('<div>');
+			border.css({
+				width:target.width() + 'px',
+				height:target.height() + 'px',
+				boxSizing:'border-box',
+				border:'1px solid #' + color,
+				position:'absolute',
+				//left:'0px',
+				//top:'0px',
+				left:offset.left,
+				top:offset.top
+			});
+			container.append( border );
+
+
+			//add tooltip
+			var tooltip = $('<div>');
+			var id = target.attr( 'id' );
+			if( !id ) id = '';
+			var className = target.attr( 'class' );
+			if( !className ) className = '無';
+
+			var html = 'id:' + id + ', class:' + className;
+			tooltip.html( html );
+
+			tooltip.css({
+				position:'absolute',
+				left:'0px',
+				top:'0px',
+				fontSize:'20px',
+				//left:offset.left,
+				//top:offset.top,
+				backgroundColor:'#' + color
+			});
+			border.append( tooltip );
+
+		});
+
+
+	}
+
+
+	DomView.prototype = {
+
+
+
+	}
+
+	return DomView;
+
+})();
 
 
 
@@ -1494,7 +1494,7 @@ YSD.ScrollElement = (function(){
 })();
 
 
-MYAPP.AudioManager = (function(){
+YSD.AudioManager = (function(){
 
 	var loadCount = 0;
 	var length = 0;
@@ -1509,6 +1509,8 @@ MYAPP.AudioManager = (function(){
 
 
 	function AudioManager(){
+
+		if( !YSD.ua ) YSD.ua = new YSD.UserAgent();
 
 		this.audios = {};
 		this.loadingAudios = {};
@@ -1531,7 +1533,7 @@ MYAPP.AudioManager = (function(){
 				this.loadingAudios[data.value] = true;
 			}
 
-			new MYAPP.AudioLoader( datas, function(){
+			new YSD.AudioLoader( datas, function(){
 				var _audios = arguments[1];
 				for( var key in _audios ){
 					this.audios[key] = _audios[key];
@@ -1548,7 +1550,7 @@ MYAPP.AudioManager = (function(){
 			if( this.audios[data.value] ) this.delete( data.value );
 			this.loadingAudios[data.value] = true;
 
-			new MYAPP.AudioLoader( data, function(){
+			new YSD.AudioLoader( data, function(){
 				var _audios = arguments[1];
 				for( var key in _audios ){
 					this.audios[key] = _audios[key];
@@ -1564,7 +1566,7 @@ MYAPP.AudioManager = (function(){
 		play : function( value, fadeFlag, fadeTime ){
 
 			this.playStep2( value, fadeFlag, fadeTime );
-			// if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			// if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 	  // 			if( this.checkSampleRateBug() ) this.playStep2( value, fadeFlag, fadeTime );
 	  // 		}
 
@@ -1577,12 +1579,12 @@ MYAPP.AudioManager = (function(){
 
 			var type = this.audios[ value ].type;
 
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 
-				var source = MYAPP.audioContext.createBufferSource();
+				var source = YSD.audioContext.createBufferSource();
                 source.start = source.start || source.noteOn;
 				source.buffer = this.audios[ value ];
-				//source.connect(MYAPP.audioContext.destination);	//ボリューム調整するときはいらない
+				//source.connect(YSD.audioContext.destination);	//ボリューム調整するときはいらない
 
 				//volume
 				gainNode = this.getGainNode( source, type );
@@ -1611,7 +1613,7 @@ MYAPP.AudioManager = (function(){
 
 		getGainNode : function( source, type ){
 
-			gainNode = MYAPP.audioContext.createGain();
+			gainNode = YSD.audioContext.createGain();
 			if( type == 'bgm' ){
 				gainNode.gain.value = bgmVolume;
 			}else if( type == 'se' ){
@@ -1620,16 +1622,16 @@ MYAPP.AudioManager = (function(){
 			 	gainNode.gain.value = serifVolume;
 			}
 			source.connect(gainNode);
-			gainNode.connect(MYAPP.audioContext.destination);
+			gainNode.connect(YSD.audioContext.destination);
 
 			return gainNode;
 		},
 
 
 		checkSampleRateBug : function(){
-		  if(MYAPP.audioContext.sampleRate !== 44100){
-		    MYAPP.audioContext.close();
-		    MYAPP.audioContext = new AudioContext();
+		  if(YSD.audioContext.sampleRate !== 44100){
+		    YSD.audioContext.close();
+		    YSD.audioContext = new AudioContext();
 		    return true;
 		  }
 		  return false;
@@ -1638,7 +1640,7 @@ MYAPP.AudioManager = (function(){
 
 		fade : function( fadeInOutType, type, value, fadeTime, gainNode, callback ){
 
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 				gainNode.gain.value = 0;
 			}else{
 				this.audios[ value ].volume = 0;
@@ -1660,7 +1662,7 @@ MYAPP.AudioManager = (function(){
                 progress:function () {
                     var _volume = arguments[1].elem.volume;
                     var _value = arguments[0];
-                    if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+                    if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
                     	gainNode.gain.value = _volume;
                     }else{
 	                    this.audios[ _value ].volume = _volume;
@@ -1678,7 +1680,7 @@ MYAPP.AudioManager = (function(){
 
 			if( name ){
 
-				if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+				if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 					if( !sources[name] ) return;
 					sources[name].stop(0);
 					delete sources[name];
@@ -1690,7 +1692,7 @@ MYAPP.AudioManager = (function(){
 				return;
 			}
 
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 				for( var key in sources ){
 					sources[key].stop(0);
 				}
@@ -1736,7 +1738,7 @@ MYAPP.AudioManager = (function(){
 
 		stopOnType : function( type ){
 
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 				for( var key in sources ){
 			
 					if( key.indexOf( type ) != -1 ){
@@ -1764,8 +1766,8 @@ MYAPP.AudioManager = (function(){
 			}
 			var type = this.audios[ value ].type;
 
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
-				var source = MYAPP.audioContext.createBufferSource();
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
+				var source = YSD.audioContext.createBufferSource();
                 source.start = source.start || source.noteOn;
 				source.buffer = this.audios[ value ];
 				gainNode = this.getGainNode( source, type );
@@ -1774,7 +1776,7 @@ MYAPP.AudioManager = (function(){
 			var callback = function(){
 
 				var _value = arguments[0];
-				if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+				if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 					if( sources[_value] ) sources[_value].stop(0);
 					delete sources[_value];
 				}else{
@@ -1801,7 +1803,7 @@ MYAPP.AudioManager = (function(){
 
 			if( !this.audios[ value ] ) return;
 
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 				sources[value].stop(0);
 				delete sources[value];
 			}else{
@@ -1842,7 +1844,7 @@ MYAPP.AudioManager = (function(){
 
 
 
-MYAPP.AudioLoader = (function(){
+YSD.AudioLoader = (function(){
 
 	function AudioLoader( datas, callback ){
 
@@ -1868,7 +1870,7 @@ MYAPP.AudioLoader = (function(){
 
 		load : function( obj ){
 			
-			if( MYAPP.ua.is_iOS || MYAPP.ua.isAndroid ){
+			if( YSD.ua.is_iOS || YSD.ua.isAndroid ){
 
 				var request = new XMLHttpRequest();
 				request.open('GET', obj.src, true);
@@ -1876,7 +1878,7 @@ MYAPP.AudioLoader = (function(){
 				request.onload = function() {
 
 					var _obj = arguments[0];
-					MYAPP.audioContext.decodeAudioData(request.response, function(buffer) {
+					YSD.audioContext.decodeAudioData(request.response, function(buffer) {
 						
 						if( _obj.type == 'serif' ){
 							var key = _obj.value;
@@ -1937,7 +1939,7 @@ MYAPP.AudioLoader = (function(){
 
 		loadCompHandler : function( e ){
 			
-			if( MYAPP.ua.platform == 'pc' ){
+			if( YSD.ua.platform == 'pc' ){
 				$( e.target ).off( 'loadedmetadata' );
 				$( e.target ).off( 'error' );
 			}
@@ -1952,8 +1954,8 @@ MYAPP.AudioLoader = (function(){
 
 		loadErrorHandler : function(){
 
-			MYAPP.errorPopup.setMessage( '読み込みに失敗しました。' );
-			MYAPP.errorPopup.show();
+			YSD.errorPopup.setMessage( '読み込みに失敗しました。' );
+			YSD.errorPopup.show();
 
 			this.loadCount++;
 			if( this.loadCount >= this.length ){
