@@ -335,6 +335,106 @@ YSD.CanvasAnimater0 = (function(){
 	return CanvasAnimater0;
 
 })();
+YSD.CanvasManager = (function(){
+
+	function CanvasManager(){
+
+		this.element = $( '<div>' );
+
+	}
+
+
+	CanvasManager.prototype = {
+
+		getGrayScaleData : function( img, defaultColor, _callback ){
+
+			var callback = function(){
+				var datas = this.getGrayScaleDataStep2( img, defaultColor );
+				_callback( datas );
+			}.bind( this );
+			
+			if( img.complete ){
+				this.imgLoadComp( callback );
+			}else{
+				img.onload = this.imgLoadComp.bind( this, callback );
+			}
+
+		},
+
+
+		imgLoadComp : function( callback ){
+
+		 	callback();
+
+		},
+
+
+		//色情報の配列を返す
+		//xとyにはピクセル座標が、zにはグレースケールの色情報が入る
+		getGrayScaleDataStep2 : function( img, defaultColor ){
+
+			var canvas = $( '<canvas>' );
+	        canvas.attr({ width:64, height:64 });
+	        canvas.hide();
+	        $( document.body ).append( canvas );
+	        
+			var ctx = canvas[0].getContext('2d');
+
+			var w = canvas.width();
+			var h = canvas.height();
+			ctx.drawImage( img, 0, 0, w, h );
+			var imgData = ctx.getImageData( 0, 0, w, h );
+
+			var imgDataW = imgData.width;
+			var imgDataH = imgData.height;
+
+			var pixelIndex = 0;
+			var datas = [];
+			for ( var x = 0; x < imgDataW; x++ ) {
+				for ( var y = 0; y < imgDataH; y++ ) {
+
+					var i = ((y * 4) * imgDataW) + (x * 4);
+
+					var r = imgData.data[i];
+					var g = imgData.data[i+1];
+					var b = imgData.data[i+2];
+					if( Math.abs( r - defaultColor ) < 10 &&
+						Math.abs( g - defaultColor ) < 10 &&
+						Math.abs( b - defaultColor ) < 10 ){
+
+	                    // imgData.data[i] = 0;
+	                    // imgData.data[i + 1] = 0;
+	                    // imgData.data[i + 2] = this.defaultColor;
+	                    // imgData.data[i + 3] = this.defaultColor;
+	                
+	                }else{
+						datas[ pixelIndex ] = {
+							x:x,
+							y:y,
+							z:( r+g+b )/3/255
+						};
+						
+
+	                    // imgData.data[i + 1] = imgData.data[i + 1];
+	                    // imgData.data[i + 2] = imgData.data[i + 2];
+	                    // imgData.data[i + 3] = imgData.data[i + 3];
+	                    pixelIndex++;
+
+	                }
+             
+				}
+			}
+
+			//return imgData;
+			return datas;
+
+		}
+
+	}
+
+	return CanvasManager;
+
+})();
 YSD.CanvasMosaic = (function(){
 	
 	function CanvasMosaic( element, img ){
@@ -508,100 +608,6 @@ YSD.CanvasMosaicAnimater0 = (function( _super ){
 	return CanvasMosaicAnimater0;
 
 })( YSD.CanvasAnimater0 );
-YSD.CanvasPixelIndex0 = (function(){
-	
-	function CanvasPixelIndex0( img, defaultColor ){
-
-        var canvas = $( '<canvas>' );
-        canvas.attr({ width:64, height:64 });
-        canvas.hide();
-        $( document.body ).append( canvas );
-        
-		this.element = $( canvas );
-		this.ctx = this.element[0].getContext('2d');
-		this.img = img;
-		this.defaultColor = defaultColor;
-
-		if( img.complete ){
-			this.imgLoadComp();
-		}else{
-			img.onload = this.imgLoadComp.bind( this );
-		}
-	}
-
-
-	CanvasPixelIndex0.prototype = {
-
-		imgLoadComp : function(){
-
-			// var imgData = this.generateIndex0();
-		 	//this.ctx.putImageData( imgData, 0, 0 );
-
-			var colors = this.generateIndex0();
-			setTimeout(function(){
-				this.element.triggerHandler( 'callback', { colors:colors } );
-			}.bind( this ), 100 );
-
-		},
-
-
-		generateIndex0 : function(){
-
-			var w = this.element.width();
-			var h = this.element.height();
-			this.ctx.drawImage( this.img, 0, 0, w, h );
-			var imgData = this.ctx.getImageData( 0, 0, w, h );
-
-			var imgDataW = imgData.width;
-			var imgDataH = imgData.height;
-
-			var pixelIndex = 0;
-			var colors = [];
-			for ( var x = 0; x < imgDataW; x++ ) {
-				for ( var y = 0; y < imgDataH; y++ ) {
-
-					var i = ((y * 4) * imgDataW) + (x * 4);
-
-					var r = imgData.data[i];
-					var g = imgData.data[i+1];
-					var b = imgData.data[i+2];
-					if( Math.abs( r - this.defaultColor ) < 10 &&
-						Math.abs( g - this.defaultColor ) < 10 &&
-						Math.abs( b - this.defaultColor ) < 10 ){
-
-	                    // imgData.data[i] = 0;
-	                    // imgData.data[i + 1] = 0;
-	                    // imgData.data[i + 2] = this.defaultColor;
-	                    // imgData.data[i + 3] = this.defaultColor;
-	                
-	                }else{
-						colors[ pixelIndex ] = {
-							x:x,
-							y:y,
-							z:( r+g+b )/3/255
-						};
-						
-
-	                    // imgData.data[i + 1] = imgData.data[i + 1];
-	                    // imgData.data[i + 2] = imgData.data[i + 2];
-	                    // imgData.data[i + 3] = imgData.data[i + 3];
-	                    pixelIndex++;
-
-	                }
-             
-				}
-			}
-
-			//return imgData;
-			return colors;
-
-		}
-
-	};
-	
-	return CanvasPixelIndex0;
-
-})();
 YSD.CanvasRgbShift = (function(){
 	
 	function CanvasRgbShift( element, img ){
@@ -1494,6 +1500,25 @@ YSD.ScrollElement = (function(){
 })();
 
 
+
+/****************************************************************/
+//Elementクラス
+/****************************************************************/
+YSD.Element = (function(){
+
+	function Element( expr, index ){
+
+		if( index == null ){
+			this.element = $( expr );
+		}else{
+			this.element = $( $( expr )[index] );
+		}
+
+	}
+
+	return Element;
+
+})();
 YSD.AudioManager = (function(){
 
 	var loadCount = 0;
@@ -1900,7 +1925,7 @@ YSD.CameraManager = (function(){
 		if (this.hasGetUserMedia()) {
 			console.log("カメラ OK");
 		} else {
-			alert("未対応ブラウザです。");
+			console.log("未対応ブラウザです。");
 		}
 
 		navigator.getUserMedia({video: true}, function(stream) {
@@ -2378,127 +2403,6 @@ YSD.VideoManager3 = (function(){
 })();
 
 /****************************************************************/
-//Elementクラス
-/****************************************************************/
-YSD.Element = (function(){
-
-	function Element( expr, index ){
-
-		if( index == null ){
-			this.element = $( expr );
-		}else{
-			this.element = $( $( expr )[index] );
-		}
-
-	}
-
-	return Element;
-
-})();
-YSD.PixiAssetManager = (function(){
-    
-    var callBack;
-
-    function PixiAssetManager( assetUrls, _callBack ) {
-
-        callBack = _callBack;
-
-        var loader = new PIXI.AssetLoader( assetUrls, false);
-        loader.onComplete = this.assetsLoadComp.bind(this);
-        loader.load();
-    
-    }
-
-    PixiAssetManager.prototype = {
-
-        assetsLoadComp : function() {
-
-            callBack();
-        
-        }
-    
-    }
-
-    return PixiAssetManager;
-
-})();
-
-if( typeof( PIXI ) != 'undefined' ){
-
-	YSD.PixiMovieClip = (function( _super ){
-
-	    __extends( PixiMovieClip, _super );
-
-		function PixiMovieClip( spriteSheet, frameLate ){
-
-	        _super.call( this, spriteSheet );
-
-	        this.animations = {};
-	        this.nowAnimation = '';
-	        this.renderFlag = false;
-	        this.loop = false;
-
-	        if( !frameLate ) frameLate = 30;
-	        setInterval( this.animate.bind( this ), 1000 / frameLate );
-
-		}
-
-
-		var p = PixiMovieClip.prototype;
-		
-		p.setAnimation = function( name, start, end, loop, callback ){
-
-			this.nowAnimation = name;
-			this.animations[ name ] = {
-				start:start,
-				end:end,
-				loop:loop,
-				callback:callback
-			};
-
-		};
-
-
-		p.playByName = function( name ){
-
-			this.nowAnimation = name;
-			var animation = this.animations[ this.nowAnimation ];
-			this.gotoAndPlay( animation.start );
-			if( !this.playing ) this.play();
-
-		};
-
-
-		p.animate = function(){
-
-			if( !this.playing ) return;
-
-			var animation = this.animations[ this.nowAnimation ];
-
-			if( animation ){
-				if( this.currentFrame >= animation.end ){
-					if( animation.loop ){
-						this.gotoAndPlay( animation.start );
-					}else{
-						this.stop();
-						if( animation.callback ){
-							animation.callback();
-						}
-					}
-				}
-			}
-
-		};
-
-
-		
-		return PixiMovieClip;
-
-	})( PIXI.MovieClip );
-
-}
-
-/****************************************************************/
 //FPS、this.deltaTimeの取得クラス
 /****************************************************************/
 YSD.Time = (function(){
@@ -2734,3 +2638,105 @@ YSD.utils = {
 	}
 
 };
+YSD.PixiAssetManager = (function(){
+    
+    var callBack;
+
+    function PixiAssetManager( assetUrls, _callBack ) {
+
+        callBack = _callBack;
+
+        var loader = new PIXI.AssetLoader( assetUrls, false);
+        loader.onComplete = this.assetsLoadComp.bind(this);
+        loader.load();
+    
+    }
+
+    PixiAssetManager.prototype = {
+
+        assetsLoadComp : function() {
+
+            callBack();
+        
+        }
+    
+    }
+
+    return PixiAssetManager;
+
+})();
+
+if( typeof( PIXI ) != 'undefined' ){
+
+	YSD.PixiMovieClip = (function( _super ){
+
+	    __extends( PixiMovieClip, _super );
+
+		function PixiMovieClip( spriteSheet, frameLate ){
+
+	        _super.call( this, spriteSheet );
+
+	        this.animations = {};
+	        this.nowAnimation = '';
+	        this.renderFlag = false;
+	        this.loop = false;
+
+	        if( !frameLate ) frameLate = 30;
+	        setInterval( this.animate.bind( this ), 1000 / frameLate );
+
+		}
+
+
+		var p = PixiMovieClip.prototype;
+		
+		p.setAnimation = function( name, start, end, loop, callback ){
+
+			this.nowAnimation = name;
+			this.animations[ name ] = {
+				start:start,
+				end:end,
+				loop:loop,
+				callback:callback
+			};
+
+		};
+
+
+		p.playByName = function( name ){
+
+			this.nowAnimation = name;
+			var animation = this.animations[ this.nowAnimation ];
+			this.gotoAndPlay( animation.start );
+			if( !this.playing ) this.play();
+
+		};
+
+
+		p.animate = function(){
+
+			if( !this.playing ) return;
+
+			var animation = this.animations[ this.nowAnimation ];
+
+			if( animation ){
+				if( this.currentFrame >= animation.end ){
+					if( animation.loop ){
+						this.gotoAndPlay( animation.start );
+					}else{
+						this.stop();
+						if( animation.callback ){
+							animation.callback();
+						}
+					}
+				}
+			}
+
+		};
+
+
+		
+		return PixiMovieClip;
+
+	})( PIXI.MovieClip );
+
+}

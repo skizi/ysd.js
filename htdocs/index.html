@@ -9,54 +9,74 @@
 </head>
 <body id="top">
 
-	<img src="assets/images/test1.jpg" id="img">
-	<img src="assets/images/logo0.jpg" id="img2">
+	<img src="assets/images/test1.jpg" id="img1">
+	<img src="assets/images/test2.jpg" id="img2">
 	<canvas width="500" height="500" id="canvas"></canvas>
 	<canvas width="64" height="64" id="canvas2"></canvas>
 	<div id="debug"></div>
 	<script>
+
+
+	var MYAPP = MYAPP||{};
+
+	$( window ).on( 'load', function(){
+
+		new MYAPP.Main();
+
+	});
+
+
+	MYAPP.Main = (function(){
+
+		function Main(){
+
+			var debug = document.getElementById( 'debug' );
+
+			//----------------------CanvasRgbShiftAnimater0------------------------
+			var canvas = $( 'canvas' );
+			var img = $( '#img1' );
+			canvas.attr({ width:img.width(), height:img.height() });
+			var animater = new YSD.CanvasRgbShiftAnimater0( canvas, img[0], 10, 10, 30 );
+			animater.element.on( 'callback', animaterCompHandler );
+			animater.loopFlag = true;
+			animater.play();
+			//animater.reverse( true );
+
+
+			//----------------------CanvasRgbShiftAnimater0------------------------
+			var img2 = $( '#img2' );
+			var canvasManager = new YSD.CanvasManager();
+			canvasManager.getGrayScaleData( img2[0], 255, function( datas ){
+				console.log( datas );
+			} );
+
+			var audioManager = new YSD.AudioManager();
+			var datas = [
+				{
+					value:'se0',
+					src:'assets/sound/0.ogg'
+				},
+				{
+					value:'se1',
+					src:'assets/sound/1.ogg'
+				}
+			];
+
+			audioManager.loadAudios( datas, function(){
+				audioManager.play( 'se1' );
+			});
+
+		}
 		
+
 		function animaterCompHandler(){
 			console.log( arguments[1].type );
 		}
 
-		function pixelIndexCallBack(){
-			var colors = arguments[1].colors;
-			console.log( colors );
-		}
 
-		var debug = document.getElementById( 'debug' );
+		return Main;
 
-		var canvas = document.getElementById( 'canvas' );
-		var img = document.getElementById( 'img' );
-		var animater = new YSD.CanvasRgbShiftAnimater0( canvas, img, 10, 10, 30 );
-		animater.element.on( 'callback', animaterCompHandler );
-		animater.loopFlag = true;
-		animater.play();
-		//animater.reverse( true );
-
-
-		var canvas2 = document.getElementById( 'canvas2' );
-		var img2 = document.getElementById( 'img2' );
-		var pixelIndex = new YSD.CanvasPixelIndex0( img2, 255 );
-		pixelIndex.element.on( 'callback', pixelIndexCallBack.bind( this ) );
-
-
-		var audioManager = new YSD.AudioManager();
-		var datas = [
-			{
-				value:'se0',
-				src:'assets/sound/0.ogg'
-			},
-			{
-				value:'se1',
-				src:'assets/sound/1.ogg'
-			}
-		];
-
-		audioManager.loadAudios( datas, function(){
-			audioManager.play( 'se1' );
-		});
+	})();
 
 	</script>
 </body>

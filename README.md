@@ -23,7 +23,7 @@ audioManager.loadAudios( datas, function(){
 });
 ```
 
-■ユーザーエージェントヘルパー
+■ユーザーエージェントヘルパー  
 YSD.UserAgent  
 ・スマホかパソコンか、何のブラウザかの判定、ブラウザのバージョンの確認
 ```

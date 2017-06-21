@@ -21,7 +21,7 @@ YSD.CameraManager = (function(){
 		if (this.hasGetUserMedia()) {
 			console.log("カメラ OK");
 		} else {
-			alert("未対応ブラウザです。");
+			console.log("未対応ブラウザです。");
 		}
 
 		navigator.getUserMedia({video: true}, function(stream) {
