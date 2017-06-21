@@ -43,7 +43,7 @@
 			//animater.reverse( true );
 
 
-			//----------------------CanvasRgbShiftAnimater0------------------------
+			//----------------------CanvasManager------------------------
 			var img2 = $( '#img2' );
 			var canvasManager = new YSD.CanvasManager();
 			canvasManager.getGrayScaleData( img2[0], 255, function( datas ){
@@ -65,6 +65,11 @@
 			audioManager.loadAudios( datas, function(){
 				audioManager.play( 'se1' );
 			});
+
+
+			//----------------------CameraManager------------------------
+			var cameraManager = new YSD.CameraManager();
+			$( document.body ).append( cameraManager.video );
 
 		}
 		

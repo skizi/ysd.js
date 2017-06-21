@@ -123,76 +123,6 @@ YSD.SpriteAnimator = (function(){
 	return SpriteAnimator;
 
 })();
-YSD.DomView = (function(){
-
-	function DomView(){
-		
-		var container = $('<div>');
-		container.css({
-			position:'absolute',
-			top:'0px',
-			left:'0px'
-		});
-		$(document.body).append( container );
-
-		$( '*' ).each(function(){
-
-			var target = $(this);
-			var offset = target.offset();
-			var color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
-
-			//add border
-			var border = $('<div>');
-			border.css({
-				width:target.width() + 'px',
-				height:target.height() + 'px',
-				boxSizing:'border-box',
-				border:'1px solid #' + color,
-				position:'absolute',
-				//left:'0px',
-				//top:'0px',
-				left:offset.left,
-				top:offset.top
-			});
-			container.append( border );
-
-
-			//add tooltip
-			var tooltip = $('<div>');
-			var id = target.attr( 'id' );
-			if( !id ) id = '';
-			var className = target.attr( 'class' );
-			if( !className ) className = '無';
-
-			var html = 'id:' + id + ', class:' + className;
-			tooltip.html( html );
-
-			tooltip.css({
-				position:'absolute',
-				left:'0px',
-				top:'0px',
-				fontSize:'20px',
-				//left:offset.left,
-				//top:offset.top,
-				backgroundColor:'#' + color
-			});
-			border.append( tooltip );
-
-		});
-
-
-	}
-
-
-	DomView.prototype = {
-
-
-
-	}
-
-	return DomView;
-
-})();
 YSD.CanvasAnimater0 = (function(){
 	
 	function CanvasAnimater0( canvas, img, length, strength, fps ){
@@ -806,6 +736,76 @@ YSD.CanvasRgbShiftAnimater0 = (function( _super ){
 	return CanvasRgbShiftAnimater0;
 
 })( YSD.CanvasAnimater0 );
+YSD.DomView = (function(){
+
+	function DomView(){
+		
+		var container = $('<div>');
+		container.css({
+			position:'absolute',
+			top:'0px',
+			left:'0px'
+		});
+		$(document.body).append( container );
+
+		$( '*' ).each(function(){
+
+			var target = $(this);
+			var offset = target.offset();
+			var color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+
+			//add border
+			var border = $('<div>');
+			border.css({
+				width:target.width() + 'px',
+				height:target.height() + 'px',
+				boxSizing:'border-box',
+				border:'1px solid #' + color,
+				position:'absolute',
+				//left:'0px',
+				//top:'0px',
+				left:offset.left,
+				top:offset.top
+			});
+			container.append( border );
+
+
+			//add tooltip
+			var tooltip = $('<div>');
+			var id = target.attr( 'id' );
+			if( !id ) id = '';
+			var className = target.attr( 'class' );
+			if( !className ) className = '無';
+
+			var html = 'id:' + id + ', class:' + className;
+			tooltip.html( html );
+
+			tooltip.css({
+				position:'absolute',
+				left:'0px',
+				top:'0px',
+				fontSize:'20px',
+				//left:offset.left,
+				//top:offset.top,
+				backgroundColor:'#' + color
+			});
+			border.append( tooltip );
+
+		});
+
+
+	}
+
+
+	DomView.prototype = {
+
+
+
+	}
+
+	return DomView;
+
+})();
 YSD.KeyManager = (function(){
 
 
@@ -1500,25 +1500,6 @@ YSD.ScrollElement = (function(){
 })();
 
 
-
-/****************************************************************/
-//Elementクラス
-/****************************************************************/
-YSD.Element = (function(){
-
-	function Element( expr, index ){
-
-		if( index == null ){
-			this.element = $( expr );
-		}else{
-			this.element = $( $( expr )[index] );
-		}
-
-	}
-
-	return Element;
-
-})();
 YSD.AudioManager = (function(){
 
 	var loadCount = 0;
@@ -1903,13 +1884,11 @@ YSD.AudioLoader = (function(){
 
 })();
 
-
-//まだiphoneのsafariに対応していない
 YSD.CameraManager = (function(){
 	
 	var localMediaStream = null;
-	this.video;
-	this.canvas;
+	this.video; //webカメラ用
+	this.canvas; //静止画キャプチャ用
 	var ctx;
 
 
@@ -1922,16 +1901,19 @@ YSD.CameraManager = (function(){
 		this.canvas = $('<canvas>');
 		ctx = this.canvas[0].getContext('2d');
 
-		if (this.hasGetUserMedia()) {
-			console.log("カメラ OK");
-		} else {
-			console.log("未対応ブラウザです。");
+		if( this.hasGetUserMedia() ){
+			console.log( 'カメラ OK' );
+		}else{
+			console.log( '未対応ブラウザです。' );
 		}
 
-		navigator.getUserMedia({video: true}, function(stream) {
-		  if( this.video ) this.video.src = window.URL.createObjectURL(stream);
-		  localMediaStream = stream;
-		}, this.onFailSoHard);
+
+		navigator.getUserMedia({ video : true}, function( stream ){
+
+			if( this.video ) this.video.attr({ src : window.URL.createObjectURL(stream) });
+			localMediaStream = stream;
+
+		}.bind( this ), this.onFailSoHard );
 
 	}
 
@@ -1939,22 +1921,28 @@ YSD.CameraManager = (function(){
 	CameraManager.prototype = {
 	 
 		hasGetUserMedia : function() {
+
 			return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
 				navigator.mozGetUserMedia || navigator.msGetUserMedia);
+		
 		},
 
 
 		onFailSoHard : function( e ) {
-			console.log('エラー!', e);
+		
+			console.log( 'エラー!', e );
+		
 		},
 
 
 		//----------------------------------グローバル関数-----------------------------------
 		snapshot : function() {
+		
 			if (localMediaStream) {
 				ctx.drawImage( this.video, 0, 0);
 				return this.canvas.toDataURL('image/webp');
 			}
+		
 		}
 
 
@@ -2403,6 +2391,127 @@ YSD.VideoManager3 = (function(){
 })();
 
 /****************************************************************/
+//Elementクラス
+/****************************************************************/
+YSD.Element = (function(){
+
+	function Element( expr, index ){
+
+		if( index == null ){
+			this.element = $( expr );
+		}else{
+			this.element = $( $( expr )[index] );
+		}
+
+	}
+
+	return Element;
+
+})();
+YSD.PixiAssetManager = (function(){
+    
+    var callBack;
+
+    function PixiAssetManager( assetUrls, _callBack ) {
+
+        callBack = _callBack;
+
+        var loader = new PIXI.AssetLoader( assetUrls, false);
+        loader.onComplete = this.assetsLoadComp.bind(this);
+        loader.load();
+    
+    }
+
+    PixiAssetManager.prototype = {
+
+        assetsLoadComp : function() {
+
+            callBack();
+        
+        }
+    
+    }
+
+    return PixiAssetManager;
+
+})();
+
+if( typeof( PIXI ) != 'undefined' ){
+
+	YSD.PixiMovieClip = (function( _super ){
+
+	    __extends( PixiMovieClip, _super );
+
+		function PixiMovieClip( spriteSheet, frameLate ){
+
+	        _super.call( this, spriteSheet );
+
+	        this.animations = {};
+	        this.nowAnimation = '';
+	        this.renderFlag = false;
+	        this.loop = false;
+
+	        if( !frameLate ) frameLate = 30;
+	        setInterval( this.animate.bind( this ), 1000 / frameLate );
+
+		}
+
+
+		var p = PixiMovieClip.prototype;
+		
+		p.setAnimation = function( name, start, end, loop, callback ){
+
+			this.nowAnimation = name;
+			this.animations[ name ] = {
+				start:start,
+				end:end,
+				loop:loop,
+				callback:callback
+			};
+
+		};
+
+
+		p.playByName = function( name ){
+
+			this.nowAnimation = name;
+			var animation = this.animations[ this.nowAnimation ];
+			this.gotoAndPlay( animation.start );
+			if( !this.playing ) this.play();
+
+		};
+
+
+		p.animate = function(){
+
+			if( !this.playing ) return;
+
+			var animation = this.animations[ this.nowAnimation ];
+
+			if( animation ){
+				if( this.currentFrame >= animation.end ){
+					if( animation.loop ){
+						this.gotoAndPlay( animation.start );
+					}else{
+						this.stop();
+						if( animation.callback ){
+							animation.callback();
+						}
+					}
+				}
+			}
+
+		};
+
+
+		
+		return PixiMovieClip;
+
+	})( PIXI.MovieClip );
+
+}
+
+/****************************************************************/
 //FPS、this.deltaTimeの取得クラス
 /****************************************************************/
 YSD.Time = (function(){
@@ -2638,105 +2747,3 @@ YSD.utils = {
 	}
 
 };
-YSD.PixiAssetManager = (function(){
-    
-    var callBack;
-
-    function PixiAssetManager( assetUrls, _callBack ) {
-
-        callBack = _callBack;
-
-        var loader = new PIXI.AssetLoader( assetUrls, false);
-        loader.onComplete = this.assetsLoadComp.bind(this);
-        loader.load();
-    
-    }
-
-    PixiAssetManager.prototype = {
-
-        assetsLoadComp : function() {
-
-            callBack();
-        
-        }
-    
-    }
-
-    return PixiAssetManager;
-
-})();
-
-if( typeof( PIXI ) != 'undefined' ){
-
-	YSD.PixiMovieClip = (function( _super ){
-
-	    __extends( PixiMovieClip, _super );
-
-		function PixiMovieClip( spriteSheet, frameLate ){
-
-	        _super.call( this, spriteSheet );
-
-	        this.animations = {};
-	        this.nowAnimation = '';
-	        this.renderFlag = false;
-	        this.loop = false;
-
-	        if( !frameLate ) frameLate = 30;
-	        setInterval( this.animate.bind( this ), 1000 / frameLate );
-
-		}
-
-
-		var p = PixiMovieClip.prototype;
-		
-		p.setAnimation = function( name, start, end, loop, callback ){
-
-			this.nowAnimation = name;
-			this.animations[ name ] = {
-				start:start,
-				end:end,
-				loop:loop,
-				callback:callback
-			};
-
-		};
-
-
-		p.playByName = function( name ){
-
-			this.nowAnimation = name;
-			var animation = this.animations[ this.nowAnimation ];
-			this.gotoAndPlay( animation.start );
-			if( !this.playing ) this.play();
-
-		};
-
-
-		p.animate = function(){
-
-			if( !this.playing ) return;
-
-			var animation = this.animations[ this.nowAnimation ];
-
-			if( animation ){
-				if( this.currentFrame >= animation.end ){
-					if( animation.loop ){
-						this.gotoAndPlay( animation.start );
-					}else{
-						this.stop();
-						if( animation.callback ){
-							animation.callback();
-						}
-					}
-				}
-			}
-
-		};
-
-
-		
-		return PixiMovieClip;
-
-	})( PIXI.MovieClip );
-
-}
