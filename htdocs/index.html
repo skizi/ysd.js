@@ -36,7 +36,7 @@
 			var canvas = $( 'canvas' );
 			var img = $( '#img1' );
 			canvas.attr({ width:img.width(), height:img.height() });
-			var animater = new YSD.CanvasRgbShiftAnimater0( canvas, img[0], 10, 10, 30 );
+			var animater = new YSD.CanvasRgbShiftAnimater0( canvas[0], img[0], 10, 10, 30 );
 			animater.element.on( 'callback', animaterCompHandler );
 			animater.loopFlag = true;
 			animater.play();
@@ -70,6 +70,26 @@
 			//----------------------CameraManager------------------------
 			var cameraManager = new YSD.CameraManager();
 			$( document.body ).append( cameraManager.video );
+
+
+			//----------------------TouchManager------------------------
+			var touchManager = new YSD.TouchManager();
+			touchManager.setTouchStartFunc(function(){
+				console.log( 'touchstart/mousedown' );
+			});
+
+			touchManager.setTouchMoveFunc(function(){
+				console.log( 'touchmove/mousemove' );
+				console.log( 'x:' + YSD.touch.x + ', y:' + YSD.touch.y );
+			});
+
+			touchManager.setTouchEndFunc(function(){
+				console.log( 'touchend/mouseup' );
+			});
+
+
+			//----------------------utils------------------------
+			console.log( YSD.utils.getStageProperty() );
 
 		}
 		
