@@ -3,7 +3,7 @@ javaScript library
 
 
 ■YSD.CanvasRgbShiftAnimater、YSD.CanvasMosaicAnimater  
-元画像をCanvasエフェクトさせる（マウスオーバーに合わせて実行や、逆再生も可能）  
+元画像をCanvasでエフェクトをかける（マウスオーバーに合わせて実行や、逆再生も可能）  
 ![YSD.CanvasRgbShiftAnimater、YSD.CanvasMosaicAnimater](http://skizi.jp/github/assets/images/canvas_animater.gif)
 ```
 var canvas1 = $( '#canvas1' );
@@ -12,8 +12,8 @@ var animater1 = new YSD.CanvasRgbShiftAnimater( canvas1[0], img[0], 10, 10, 30 )
 animater1.loopFlag = true;
 animater1.play();
 ```
-
-
+  
+  
 ■YSD.AudioManager  
 PCブラウザ、スマホブラウザ両対応　音再生ライブラリ  
 パソコンの場合はAudioタグ、スマホの場合はWebAudioが内部的に使われます
@@ -40,8 +40,8 @@ audioManager.loadAudios( datas, function(){
 	});
 });
 ```
-
-
+  
+  
 ■YSD.CameraManager  
 Webカメラ　ヘルパー  
 ```
@@ -49,8 +49,8 @@ var video = $( '#video1' );
 var cameraManager = new YSD.CameraManager( video );
 video.attr({ width:300 });
 ```
-
-
+  
+  
 ■YSD.TouchManager　　
 PCブラウザ、スマホブラウザ両対応　マウスイベント/タッチイベント自動切り替え
 ```
@@ -68,8 +68,8 @@ touchManager.setTouchEndFunc(function(){
 	textarea.val( 'touchend/mouseup' );
 });
 ```
-
-
+  
+  
 ■YSD.UserAgent  
 ユーザーエージェント情報を取得。スマホかパソコンか、何のブラウザかの判定、ブラウザのバージョンの確認
 ```
@@ -77,8 +77,8 @@ var ua = new YSD.UserAgent();
 if( ua.browser == 'chrome' ) alert( 'chrome' );
 if( ua.browser == 'ie' ) alert( ua.ieVer );
 ```
-
-
+  
+  
 ■YSD.utils.getStageProperty
 ブラウザのwindow、documentのサイズを取得 
 ```
