@@ -1,15 +1,15 @@
-YSD.CanvasMosaicAnimater0 = (function( _super ){
+YSD.CanvasMosaicAnimater = (function( _super ){
 	
-    __extends(CanvasMosaicAnimater0, _super);
+    __extends(CanvasMosaicAnimater, _super);
 
-	function CanvasMosaicAnimater0( canvas, img, length, strength, fps ){
+	function CanvasMosaicAnimater( canvas, img, length, strength, fps ){
 
         _super.call( this, canvas, img, length, strength, fps );
 
 	}
 
 
-	var p = CanvasMosaicAnimater0.prototype;
+	var p = CanvasMosaicAnimater.prototype;
 	
 	p.imgLoadComp = function(){
 
@@ -30,6 +30,6 @@ YSD.CanvasMosaicAnimater0 = (function( _super ){
 		this.element.triggerHandler( 'callback', { type:'imgLoadcomp' } );
 	};
 
-	return CanvasMosaicAnimater0;
+	return CanvasMosaicAnimater;
 
-})( YSD.CanvasAnimater0 );
+})( YSD.CanvasAnimater );

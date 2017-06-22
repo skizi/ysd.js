@@ -7,12 +7,13 @@ YSD.CameraManager = (function(){
 	var ctx;
 
 
-	function CameraManager(){
+	function CameraManager( video ){
 
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
  		window.URL = window.URL || window.webkitURL;
 
-		this.video = $('<video>');
+ 		this.video = $( video );
+		if( !video ) this.video = $('<video>');
 		this.canvas = $('<canvas>');
 		ctx = this.canvas[0].getContext('2d');
 

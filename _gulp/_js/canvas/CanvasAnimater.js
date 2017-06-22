@@ -1,6 +1,6 @@
-YSD.CanvasAnimater0 = (function(){
+YSD.CanvasAnimater = (function(){
 	
-	function CanvasAnimater0( canvas, img, length, strength, fps ){
+	function CanvasAnimater( canvas, img, length, strength, fps ){
 
 		this.playFlag = false;
 		this.loopFlag = false;
@@ -33,7 +33,7 @@ YSD.CanvasAnimater0 = (function(){
 	}
 
 
-	CanvasAnimater0.prototype = {
+	CanvasAnimater.prototype = {
 
 		imgLoadComp :function(){
 
@@ -137,6 +137,6 @@ YSD.CanvasAnimater0 = (function(){
 
 	}
 
-	return CanvasAnimater0;
+	return CanvasAnimater;
 
 })();

@@ -123,9 +123,79 @@ YSD.SpriteAnimator = (function(){
 	return SpriteAnimator;
 
 })();
-YSD.CanvasAnimater0 = (function(){
+YSD.DomView = (function(){
+
+	function DomView(){
+		
+		var container = $('<div>');
+		container.css({
+			position:'absolute',
+			top:'0px',
+			left:'0px'
+		});
+		$(document.body).append( container );
+
+		$( '*' ).each(function(){
+
+			var target = $(this);
+			var offset = target.offset();
+			var color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+
+			//add border
+			var border = $('<div>');
+			border.css({
+				width:target.width() + 'px',
+				height:target.height() + 'px',
+				boxSizing:'border-box',
+				border:'1px solid #' + color,
+				position:'absolute',
+				//left:'0px',
+				//top:'0px',
+				left:offset.left,
+				top:offset.top
+			});
+			container.append( border );
+
+
+			//add tooltip
+			var tooltip = $('<div>');
+			var id = target.attr( 'id' );
+			if( !id ) id = '';
+			var className = target.attr( 'class' );
+			if( !className ) className = '無';
+
+			var html = 'id:' + id + ', class:' + className;
+			tooltip.html( html );
+
+			tooltip.css({
+				position:'absolute',
+				left:'0px',
+				top:'0px',
+				fontSize:'20px',
+				//left:offset.left,
+				//top:offset.top,
+				backgroundColor:'#' + color
+			});
+			border.append( tooltip );
+
+		});
+
+
+	}
+
+
+	DomView.prototype = {
+
+
+
+	}
+
+	return DomView;
+
+})();
+YSD.CanvasAnimater = (function(){
 	
-	function CanvasAnimater0( canvas, img, length, strength, fps ){
+	function CanvasAnimater( canvas, img, length, strength, fps ){
 
 		this.playFlag = false;
 		this.loopFlag = false;
@@ -158,7 +228,7 @@ YSD.CanvasAnimater0 = (function(){
 	}
 
 
-	CanvasAnimater0.prototype = {
+	CanvasAnimater.prototype = {
 
 		imgLoadComp :function(){
 
@@ -262,7 +332,7 @@ YSD.CanvasAnimater0 = (function(){
 
 	}
 
-	return CanvasAnimater0;
+	return CanvasAnimater;
 
 })();
 YSD.CanvasManager = (function(){
@@ -503,18 +573,18 @@ YSD.CanvasMosaic = (function(){
 	return CanvasMosaic;
 
 })();
-YSD.CanvasMosaicAnimater0 = (function( _super ){
+YSD.CanvasMosaicAnimater = (function( _super ){
 	
-    __extends(CanvasMosaicAnimater0, _super);
+    __extends(CanvasMosaicAnimater, _super);
 
-	function CanvasMosaicAnimater0( canvas, img, length, strength, fps ){
+	function CanvasMosaicAnimater( canvas, img, length, strength, fps ){
 
         _super.call( this, canvas, img, length, strength, fps );
 
 	}
 
 
-	var p = CanvasMosaicAnimater0.prototype;
+	var p = CanvasMosaicAnimater.prototype;
 	
 	p.imgLoadComp = function(){
 
@@ -535,9 +605,9 @@ YSD.CanvasMosaicAnimater0 = (function( _super ){
 		this.element.triggerHandler( 'callback', { type:'imgLoadcomp' } );
 	};
 
-	return CanvasMosaicAnimater0;
+	return CanvasMosaicAnimater;
 
-})( YSD.CanvasAnimater0 );
+})( YSD.CanvasAnimater );
 YSD.CanvasRgbShift = (function(){
 	
 	function CanvasRgbShift( element, img ){
@@ -686,18 +756,18 @@ YSD.CanvasRgbShift = (function(){
 	return CanvasRgbShift;
 
 })();
-YSD.CanvasRgbShiftAnimater0 = (function( _super ){
+YSD.CanvasRgbShiftAnimater = (function( _super ){
 	
-    __extends(CanvasRgbShiftAnimater0, _super);
+    __extends(CanvasRgbShiftAnimater, _super);
 
-	function CanvasRgbShiftAnimater0( canvas, img, length, strength, fps ){
+	function CanvasRgbShiftAnimater( canvas, img, length, strength, fps ){
 
         _super.call( this, canvas, img, length, strength, fps );
 
 	}
 
 
-	var p = CanvasRgbShiftAnimater0.prototype;
+	var p = CanvasRgbShiftAnimater.prototype;
 	
 	p.imgLoadComp = function(){
 
@@ -733,79 +803,9 @@ YSD.CanvasRgbShiftAnimater0 = (function( _super ){
 	
 	};
 
-	return CanvasRgbShiftAnimater0;
+	return CanvasRgbShiftAnimater;
 
-})( YSD.CanvasAnimater0 );
-YSD.DomView = (function(){
-
-	function DomView(){
-		
-		var container = $('<div>');
-		container.css({
-			position:'absolute',
-			top:'0px',
-			left:'0px'
-		});
-		$(document.body).append( container );
-
-		$( '*' ).each(function(){
-
-			var target = $(this);
-			var offset = target.offset();
-			var color = Math.floor(Math.random() * 0xFFFFFF).toString(16);
-
-			//add border
-			var border = $('<div>');
-			border.css({
-				width:target.width() + 'px',
-				height:target.height() + 'px',
-				boxSizing:'border-box',
-				border:'1px solid #' + color,
-				position:'absolute',
-				//left:'0px',
-				//top:'0px',
-				left:offset.left,
-				top:offset.top
-			});
-			container.append( border );
-
-
-			//add tooltip
-			var tooltip = $('<div>');
-			var id = target.attr( 'id' );
-			if( !id ) id = '';
-			var className = target.attr( 'class' );
-			if( !className ) className = '無';
-
-			var html = 'id:' + id + ', class:' + className;
-			tooltip.html( html );
-
-			tooltip.css({
-				position:'absolute',
-				left:'0px',
-				top:'0px',
-				fontSize:'20px',
-				//left:offset.left,
-				//top:offset.top,
-				backgroundColor:'#' + color
-			});
-			border.append( tooltip );
-
-		});
-
-
-	}
-
-
-	DomView.prototype = {
-
-
-
-	}
-
-	return DomView;
-
-})();
+})( YSD.CanvasAnimater );
 YSD.KeyManager = (function(){
 
 
@@ -1156,6 +1156,25 @@ YSD.HistoryManager = (function(){
 
 })();
 
+
+/****************************************************************/
+//Elementクラス
+/****************************************************************/
+YSD.Element = (function(){
+
+	function Element( expr, index ){
+
+		if( index == null ){
+			this.element = $( expr );
+		}else{
+			this.element = $( $( expr )[index] );
+		}
+
+	}
+
+	return Element;
+
+})();
 
 YSD.libs = {};
 
@@ -1892,12 +1911,13 @@ YSD.CameraManager = (function(){
 	var ctx;
 
 
-	function CameraManager(){
+	function CameraManager( video ){
 
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
  		window.URL = window.URL || window.webkitURL;
 
-		this.video = $('<video>');
+ 		this.video = $( video );
+		if( !video ) this.video = $('<video>');
 		this.canvas = $('<canvas>');
 		ctx = this.canvas[0].getContext('2d');
 
@@ -2387,25 +2407,6 @@ YSD.VideoManager3 = (function(){
 
 
 	return VideoManager3;
-
-})();
-
-/****************************************************************/
-//Elementクラス
-/****************************************************************/
-YSD.Element = (function(){
-
-	function Element( expr, index ){
-
-		if( index == null ){
-			this.element = $( expr );
-		}else{
-			this.element = $( $( expr )[index] );
-		}
-
-	}
-
-	return Element;
 
 })();
 YSD.PixiAssetManager = (function(){

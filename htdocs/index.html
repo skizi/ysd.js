@@ -2,17 +2,74 @@
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
-	<title>YSD</title>
+	<title>ysd.js JavaScript Library</title>
 	<meta name="viewport" content="width=640">
+	<style>
+		p{			
+			letter-spacing: 1px;
+		}
+
+		section{
+			margin-bottom: 70px;
+		}
+
+		textarea{
+			width:300px;
+			line-height: 150%;
+			padding-left:10px;
+			letter-spacing: 2px;
+		}
+
+		textarea#stageProperty,
+		textarea#userAgentProperty{
+			height:150px;
+		}
+	</style>
 	<script src="../../jquery-2.1.1.min.js"></script>
 	<script src="../build/ysd.js"></script>
 </head>
 <body id="top">
 
-	<img src="assets/images/test1.jpg" id="img1">
-	<img src="assets/images/test2.jpg" id="img2">
-	<canvas width="500" height="500" id="canvas"></canvas>
-	<canvas width="64" height="64" id="canvas2"></canvas>
+	<h1>ysd.js examples</h1>
+
+	<section>
+		<h2>YSD.CanvasRgbShiftAnimater、YSD.CanvasMosaicAnimater</h2>
+		<p>元画像をCanvasエフェクトさせる（マウスオーバーに合わせて実行や、逆再生も可能）</p>
+		<img src="assets/images/test.jpg" width="300" id="img1">
+		<canvas width="300" height="300" id="canvas1"></canvas>
+		<canvas width="300" height="300" id="canvas2"></canvas>
+	</section>
+
+	<section>
+		<h2>YSD.AudioManager</h2>
+		<p>PCブラウザ、スマホブラウザ両対応　音再生ライブラリ</p>
+		<a id="audioBtn1" href="javascript:void(0);">音を再生(play audio)</a>
+	</section>
+
+	<section>
+		<h2>YSD.CameraManager</h2>
+		<p>Webカメラ　ヘルパー</p>
+		<video id="video1"></video>
+	</section>
+
+	<section>
+		<h2>YSD.TouchManager</h2>
+		<p>PCブラウザ、スマホブラウザ両対応　マウスイベント/タッチイベント自動切り替え</p>
+		<textarea id="mousePosition"></textarea>
+	</section>
+
+	<section>
+		<h2>YSD.UserAgent</h2>
+		<p>ユーザーエージェント情報を取得。スマホかパソコンか、何のブラウザかの判定、ブラウザのバージョンの確認</p>
+		<textarea id="userAgentProperty"></textarea>
+	</section>
+
+	<section>
+		<h2>YSD.utils.getStageProperty</h2>
+		<p>ブラウザのwindow、documentのサイズを取得</p>
+		<textarea id="stageProperty"></textarea>
+	</section>
+
 	<div id="debug"></div>
 	<script>
 
@@ -30,26 +87,33 @@
 
 		function Main(){
 
+			var ua = new YSD.UserAgent();
 			var debug = document.getElementById( 'debug' );
 
-			//----------------------CanvasRgbShiftAnimater0------------------------
-			var canvas = $( 'canvas' );
+			//----------------------CanvasRgbShiftAnimater------------------------
+			var canvas1 = $( '#canvas1' );
 			var img = $( '#img1' );
-			canvas.attr({ width:img.width(), height:img.height() });
-			var animater = new YSD.CanvasRgbShiftAnimater0( canvas[0], img[0], 10, 10, 30 );
-			animater.element.on( 'callback', animaterCompHandler );
-			animater.loopFlag = true;
-			animater.play();
-			//animater.reverse( true );
+			var animater1 = new YSD.CanvasRgbShiftAnimater( canvas1[0], img[0], 10, 10, 30 );
+			animater1.loopFlag = true;
+			animater1.play();
+
+
+			//----------------------CanvasMosaicAnimater------------------------
+			var canvas2 = $( '#canvas2' );
+			var animater2 = new YSD.CanvasMosaicAnimater( canvas2[0], img[0], 10, 10, 30 );
+			animater2.loopFlag = true;
+			animater2.play();
 
 
 			//----------------------CanvasManager------------------------
-			var img2 = $( '#img2' );
+			var img2 = $( '#img1' );
 			var canvasManager = new YSD.CanvasManager();
 			canvasManager.getGrayScaleData( img2[0], 255, function( datas ){
 				console.log( datas );
 			} );
 
+
+			//----------------------AudioManager------------------------
 			var audioManager = new YSD.AudioManager();
 			var datas = [
 				{
@@ -61,35 +125,49 @@
 					src:'assets/sound/1.ogg'
 				}
 			];
+			if( ua.platform != 'pc' ){
+				datas[0].src = 'assets/sound/0.m4a';
+				datas[1].src = 'assets/sound/1.m4a';
+			}
 
 			audioManager.loadAudios( datas, function(){
-				audioManager.play( 'se1' );
+				$( '#audioBtn1' ).on( 'click', function(){
+					audioManager.play( 'se0' );
+				});
 			});
 
 
 			//----------------------CameraManager------------------------
-			var cameraManager = new YSD.CameraManager();
-			$( document.body ).append( cameraManager.video );
+			var video = $( '#video1' );
+			var cameraManager = new YSD.CameraManager( video );
+			video.attr({ width:300 });
 
 
 			//----------------------TouchManager------------------------
+			var textarea = $( '#mousePosition' );
 			var touchManager = new YSD.TouchManager();
 			touchManager.setTouchStartFunc(function(){
-				console.log( 'touchstart/mousedown' );
+				textarea.val( 'touchstart/mousedown' );
 			});
 
 			touchManager.setTouchMoveFunc(function(){
-				console.log( 'touchmove/mousemove' );
-				console.log( 'x:' + YSD.touch.x + ', y:' + YSD.touch.y );
+				textarea.val( 'touchmove/mousemove x:' + YSD.touch.x + ', y:' + YSD.touch.y );
 			});
 
 			touchManager.setTouchEndFunc(function(){
-				console.log( 'touchend/mouseup' );
+				textarea.val( 'touchend/mouseup' );
 			});
 
 
+			//----------------------UserAgent------------------------
+			var textarea3 = $( '#userAgentProperty' );
+			textarea3.val( JSON.stringify( ua ) );
+
+
 			//----------------------utils------------------------
-			console.log( YSD.utils.getStageProperty() );
+			var textarea2 = $( '#stageProperty' );
+			var props = YSD.utils.getStageProperty();
+			textarea2.val( JSON.stringify( props ) );
 
 		}
 		

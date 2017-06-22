@@ -1,15 +1,15 @@
-YSD.CanvasRgbShiftAnimater0 = (function( _super ){
+YSD.CanvasRgbShiftAnimater = (function( _super ){
 	
-    __extends(CanvasRgbShiftAnimater0, _super);
+    __extends(CanvasRgbShiftAnimater, _super);
 
-	function CanvasRgbShiftAnimater0( canvas, img, length, strength, fps ){
+	function CanvasRgbShiftAnimater( canvas, img, length, strength, fps ){
 
         _super.call( this, canvas, img, length, strength, fps );
 
 	}
 
 
-	var p = CanvasRgbShiftAnimater0.prototype;
+	var p = CanvasRgbShiftAnimater.prototype;
 	
 	p.imgLoadComp = function(){
 
@@ -45,6 +45,6 @@ YSD.CanvasRgbShiftAnimater0 = (function( _super ){
 	
 	};
 
-	return CanvasRgbShiftAnimater0;
+	return CanvasRgbShiftAnimater;
 
-})( YSD.CanvasAnimater0 );
+})( YSD.CanvasAnimater );

@@ -1,9 +1,21 @@
 # ysd.js
 javaScript library
 
-■音のヘルパー  
-YSD.AudioManager  
-・パソコン、スマホ両対応のオーディオライブラリ。  
+
+■YSD.CanvasRgbShiftAnimater、YSD.CanvasMosaicAnimater  
+元画像をCanvasエフェクトさせる（マウスオーバーに合わせて実行や、逆再生も可能）  
+![YSD.CanvasRgbShiftAnimater、YSD.CanvasMosaicAnimater](http://skizi.jp/github/assets/images/canvas_animater.gif)
+```
+var canvas1 = $( '#canvas1' );
+var img = $( '#img1' );
+var animater1 = new YSD.CanvasRgbShiftAnimater( canvas1[0], img[0], 10, 10, 30 );
+animater1.loopFlag = true;
+animater1.play();
+```
+
+
+■YSD.AudioManager  
+PCブラウザ、スマホブラウザ両対応　音再生ライブラリ  
 パソコンの場合はAudioタグ、スマホの場合はWebAudioが内部的に使われます
 ```
 var audioManager = new YSD.AudioManager();
@@ -17,15 +29,49 @@ var datas = [
 		src:'assets/sound/1.ogg'
 	}
 ];
+if( ua.platform != 'pc' ){
+	datas[0].src = 'assets/sound/0.m4a';
+	datas[1].src = 'assets/sound/1.m4a';
+}
 
 audioManager.loadAudios( datas, function(){
-	audioManager.play( 'se1' );
+	$( '#audioBtn1' ).on( 'click', function(){
+		audioManager.play( 'se0' );
+	});
 });
 ```
 
-■ユーザーエージェントのヘルパー  
-YSD.UserAgent  
-・スマホかパソコンか、何のブラウザかの判定、ブラウザのバージョンの確認
+
+■YSD.CameraManager  
+Webカメラ　ヘルパー  
+```
+var video = $( '#video1' );
+var cameraManager = new YSD.CameraManager( video );
+video.attr({ width:300 });
+```
+
+
+■YSD.TouchManager　　
+PCブラウザ、スマホブラウザ両対応　マウスイベント/タッチイベント自動切り替え
+```
+var textarea = $( '#mousePosition' );
+var touchManager = new YSD.TouchManager();
+touchManager.setTouchStartFunc(function(){
+	textarea.val( 'touchstart/mousedown' );
+});
+
+touchManager.setTouchMoveFunc(function(){
+	textarea.val( 'touchmove/mousemove x:' + YSD.touch.x + ', y:' + YSD.touch.y );
+});
+
+touchManager.setTouchEndFunc(function(){
+	textarea.val( 'touchend/mouseup' );
+});
+```
+
+
+■YSD.UserAgent  
+ユーザーエージェント情報を取得。スマホかパソコンか、何のブラウザかの判定、ブラウザのバージョンの確認
 ```
 var ua = new YSD.UserAgent();
 if( ua.browser == 'chrome' ) alert( 'chrome' );
@@ -33,26 +79,8 @@ if( ua.browser == 'ie' ) alert( ua.ieVer );
 ```
 
 
-■マウスイベント・タッチイベントのヘルパー  
-YSD.TouchManager　　
-```
-var touchManager = new YSD.TouchManager();
-touchManager.setTouchStartFunc(function(){
-	console.log( 'touchstart/mousedown' );
-});
-
-touchManager.setTouchMoveFunc(function(){
-	console.log( 'touchmove/mousemove' );
-	console.log( 'x:' + YSD.touch.x + ', y:' + YSD.touch.y ); //座標取得
-});
-
-touchManager.setTouchEndFunc(function(){
-	console.log( 'touchend/mouseup' );
-});
-```
-
-
-■window、documentの縦横のサイズを取得  
+■YSD.utils.getStageProperty
+ブラウザのwindow、documentのサイズを取得 
 ```
 console.log( YSD.utils.getStageProperty() );
 {
@@ -63,29 +91,4 @@ console.log( YSD.utils.getStageProperty() );
 	documentH:1301,
 	documentW:800
 }
-```
-
-
-■Webカメラのヘルパー  
-YSD.CameraManager　　
-```
-var cameraManager = new YSD.CameraManager();
-$( document.body ).append( cameraManager.video );
-```
-
-
-■画像をcanvasを使用しRGBシフトエフェクトさせる
-```
-var canvas = $( 'canvas' );
-var img = $( '#img1' );
-canvas.attr({ width:img.width(), height:img.height() });
-
-var animater = new YSD.CanvasRgbShiftAnimater0(
-	canvas[0], //canvasエレメント
-	img[0], //imgエレメント
-	10, //アニメーションフレーム数
-	10, //RGBシフトの強度
-	30 //fps
-);
-animater.play();
 ```
