@@ -11,7 +11,7 @@ var img = $( '#img1' );
 var animater1 = new YSD.CanvasRgbShiftAnimater( canvas1[0], img[0], 10, 10, 30 );
 animater1.loopFlag = true;
 animater1.play();
-```
+```  
   
   
 ■YSD.AudioManager  
@@ -39,7 +39,7 @@ audioManager.loadAudios( datas, function(){
 		audioManager.play( 'se0' );
 	});
 });
-```
+```  
   
   
 ■YSD.CameraManager  
@@ -48,7 +48,7 @@ Webカメラ　ヘルパー
 var video = $( '#video1' );
 var cameraManager = new YSD.CameraManager( video );
 video.attr({ width:300 });
-```
+```  
   
   
 ■YSD.TouchManager　　
@@ -67,7 +67,7 @@ touchManager.setTouchMoveFunc(function(){
 touchManager.setTouchEndFunc(function(){
 	textarea.val( 'touchend/mouseup' );
 });
-```
+```  
   
   
 ■YSD.UserAgent  
@@ -76,7 +76,7 @@ touchManager.setTouchEndFunc(function(){
 var ua = new YSD.UserAgent();
 if( ua.browser == 'chrome' ) alert( 'chrome' );
 if( ua.browser == 'ie' ) alert( ua.ieVer );
-```
+```  
   
   
 ■YSD.utils.getStageProperty
