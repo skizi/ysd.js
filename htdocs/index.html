@@ -14,7 +14,7 @@
 		}
 
 		textarea{
-			width:300px;
+			width:500px;
 			line-height: 150%;
 			padding-left:10px;
 			letter-spacing: 2px;
@@ -25,8 +25,8 @@
 			height:150px;
 		}
 	</style>
-	<script src="../../jquery-2.1.1.min.js"></script>
-	<script src="../build/ysd.js"></script>
+	<script src="assets/js/jquery-2.1.1.min.js"></script>
+	<script src="assets/js/ysd.js"></script>
 </head>
 <body id="top">
 
@@ -108,9 +108,9 @@
 			//----------------------CanvasManager------------------------
 			var img2 = $( '#img1' );
 			var canvasManager = new YSD.CanvasManager();
-			canvasManager.getGrayScaleData( img2[0], 255, function( datas ){
-				console.log( datas );
-			} );
+			// canvasManager.getGrayScaleData( img2[0], 255, function( datas ){
+			// 	console.log( datas );
+			// } );
 
 
 			//----------------------AudioManager------------------------
@@ -125,7 +125,7 @@
 					src:'assets/sound/1.ogg'
 				}
 			];
-			if( ua.platform != 'pc' ){
+			if( ua.platform != 'pc' || ua.browser == 'ie' ){
 				datas[0].src = 'assets/sound/0.m4a';
 				datas[1].src = 'assets/sound/1.m4a';
 			}

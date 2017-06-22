@@ -92,8 +92,7 @@ YSD.AudioManager = (function(){
 			}else{
 
 				this.audios[ value ].volume = this.volume;
-
-				this.audios[ value ].play().catch(function() {});
+				this.audios[ value ].play();//.catch(function() {});
 			
 			}
 

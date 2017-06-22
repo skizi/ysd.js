@@ -21,6 +21,7 @@ YSD.CameraManager = (function(){
 			console.log( 'カメラ OK' );
 		}else{
 			console.log( '未対応ブラウザです。' );
+			return;
 		}
 
 
